@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import Header from "./componentes/Header";
 
 const api = {
   key: "be8e50436cd1cd32bfadf4bdcfc1ab8f",
   base: "https://api.openweathermap.org/data/2.5/",
 };
-function App() {
+function formWeather() {
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState({});
 
@@ -66,13 +65,12 @@ function App() {
           : "app"
       }
     >
-      <Header />
-      <main className="text-center">
+      <main>
         <div className="search-box">
           <input
             type="text"
-            className="search-bar"
-            placeholder="Search..."
+            className=""
+            placeholder="Digita la ciudad"
             onChange={(e) => setQuery(e.target.value)}
             value={query}
             onKeyPress={search}
@@ -90,8 +88,8 @@ function App() {
               <div className="temp">
                 Temperatura actual: {Math.round(weather.main.temp)}°c
               </div>
-              <div className="weather ">{weather.weather[0].main}</div>
-              <div className="humidity">Humedad: {weather.main.humidity}</div>
+              <div className="weather">{weather.weather[0].main}</div>
+              <div className="humidity"> Humedad: {weather.main.humidity}</div>
             </div>
           </div>
         ) : (
@@ -102,4 +100,4 @@ function App() {
   );
 }
 
-export default App;
+export default formWeather;
