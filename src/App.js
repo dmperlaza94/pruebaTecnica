@@ -1,23 +1,23 @@
 import React, { useState } from "react";
-import Header from "./componentes/Header";
+import { useLocalStorage } from "./componentes/UseLocalStorage";
 
 const api = {
   key: "be8e50436cd1cd32bfadf4bdcfc1ab8f",
   base: "https://api.openweathermap.org/data/2.5/",
 };
 function App() {
-  const [query, setQuery] = useState("");
+  const [city, setCity] = useLocalStorage("city");
   const [weather, setWeather] = useState({});
 
   const search = (e) => {
     if (e.key === "Enter") {
       fetch(
-        `${api.base}weather?q=${query}&appid=be8e50436cd1cd32bfadf4bdcfc1ab8f&units=metric`
+        `${api.base}weather?q=${city}&appid=be8e50436cd1cd32bfadf4bdcfc1ab8f&units=metric`
       )
         .then((res) => res.json())
         .then((result) => {
           setWeather(result);
-          setQuery("");
+          setCity("");
           console.log(result);
         });
     }
@@ -66,15 +66,14 @@ function App() {
           : "app"
       }
     >
-      <Header />
       <main className="text-center">
         <div className="search-box">
           <input
             type="text"
             className="search-bar"
             placeholder="Search..."
-            onChange={(e) => setQuery(e.target.value)}
-            value={query}
+            onChange={(e) => setCity(e.target.value)}
+            value={city}
             onKeyPress={search}
           />
         </div>
@@ -91,7 +90,7 @@ function App() {
                 Temperatura actual: {Math.round(weather.main.temp)}°c
               </div>
               <div className="weather ">{weather.weather[0].main}</div>
-              <div className="humidity">Humedad: {weather.main.humidity}</div>
+              <div className="humidity">Humedad: {weather.main.humidity} %</div>
             </div>
           </div>
         ) : (
