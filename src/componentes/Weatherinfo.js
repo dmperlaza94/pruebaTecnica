@@ -12,7 +12,7 @@ const WeatherInfo = (props) => {
       )}
 
       {props.temperature ? (
-        <div className="card card-body mt-2 animated fadeInUp">
+        <div className="card card-body mt-4 animated fadeInUp">
           {props.city && props.country && (
             <h1>
               {props.city}, {props.country}
@@ -22,13 +22,16 @@ const WeatherInfo = (props) => {
             <Icon icon={props.icon} />
           </div>
           {props.temperature && (
-            <h2>
-              Temperature: {props.temperature} ℃
-              <br /> {props.description}
-            </h2>
+            <h1>
+              {props.temperature} ℃
+              <br />
+              {props.description}
+            </h1>
           )}
-          {props.humidity && <p>Humidity: {props.humidity}</p>}
-          {props.wind_speed && <p>Wind Speed: {props.wind_speed}</p>}
+          {props.humidity && <h3>Humedad: {props.humidity}%</h3>}
+          {props.wind_speed && (
+            <h4>Velocidad del viento: {props.wind_speed}</h4>
+          )}
         </div>
       ) : (
         <div className="card card-body mt-2 text-center">
