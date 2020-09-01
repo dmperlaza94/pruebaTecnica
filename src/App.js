@@ -1,104 +1,70 @@
-import React, { useState } from "react";
-import { useLocalStorage } from "./componentes/UseLocalStorage";
+import React, { Component } from "react";
+import Header from "./componentes/Header";
+import WeatherForm from "./componentes/WeatherForm";
+
+import WeatherInfo from "./componentes/Weatherinfo";
 
 const api = {
   key: "be8e50436cd1cd32bfadf4bdcfc1ab8f",
   base: "https://api.openweathermap.org/data/2.5/",
 };
-function App() {
-  const [city, setCity] = useLocalStorage("city");
-  const [weather, setWeather] = useState({});
+class App extends Component {
+  state = {
+    temperature: "",
+    description: "",
+    icon: "",
+    humidity: "",
+    wind_speed: 0,
+    city: "",
+    country: "",
+    error: null,
+  };
 
-  const search = (e) => {
-    if (e.key === "Enter") {
-      fetch(
-        `${api.base}weather?q=${city}&appid=be8e50436cd1cd32bfadf4bdcfc1ab8f&units=metric`
-      )
-        .then((res) => res.json())
-        .then((result) => {
-          setWeather(result);
-          setCity("");
-          console.log(result);
-        });
+  getWeather = async (e) => {
+    e.preventDefault();
+    const { city, country } = e.target.elements;
+    const cityValue = city.value;
+    const countryValue = country.value;
+
+    if (cityValue && countryValue) {
+      // metric parameter is for Celcius Unit
+      const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityValue},${countryValue}&appid=${api.key}&units=metric`;
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      console.log(data);
+
+      this.setState({
+        temperature: data.main.temp,
+        description: data.weather[0].description,
+        icon: data.weather[0].icon,
+        humidity: data.main.humidity,
+        wind_speed: data.wind.speed,
+        city: data.name,
+        country: data.sys.country,
+        error: null,
+      });
+    } else {
+      this.setState({
+        error: "Please enter a City and a Country.",
+      });
     }
   };
 
-  const dateBuilder = (d) => {
-    let months = [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
-    ];
-    let days = [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miercoles",
-      "Jueves",
-      "Viernes",
-      "Sabado",
-    ];
-
-    let day = days[d.getDay()];
-    let date = d.getDate();
-    let month = months[d.getMonth()];
-    let year = d.getFullYear();
-
-    return `${day} ${date} ${month} ${year}`;
-  };
-
-  return (
-    <div
-      className={
-        typeof weather.main != "undefined"
-          ? weather.main.temp > 16
-            ? "app warm"
-            : "app"
-          : "app"
-      }
-    >
-      <main className="text-center">
-        <div className="search-box">
-          <input
-            type="text"
-            className="search-bar"
-            placeholder="Search..."
-            onChange={(e) => setCity(e.target.value)}
-            value={city}
-            onKeyPress={search}
-          />
-        </div>
-        {typeof weather.main != "undefined" ? (
-          <div>
-            <div className="location-box">
-              <div className="location">
-                {weather.name}, {weather.sys.country}
-              </div>
-              <div className="date">{dateBuilder(new Date())}</div>
-            </div>
-            <div className="weather-box">
-              <div className="temp">
-                Temperatura actual: {Math.round(weather.main.temp)}°c
-              </div>
-              <div className="weather ">{weather.weather[0].main}</div>
-              <div className="humidity">Humedad: {weather.main.humidity} %</div>
+  render() {
+    return (
+      <div>
+        <Header />
+        <div className="container p-4">
+          <div className="row">
+            <div className="col-md-6 mx-auto">
+              <WeatherForm getWeather={this.getWeather} />
+              <WeatherInfo {...this.state} />
             </div>
           </div>
-        ) : (
-          ""
-        )}
-      </main>
-    </div>
-  );
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;

@@ -1,9 +1,16 @@
 import React from "react";
+import styled from "styled-components";
 
+const TitleApp = styled.h1`
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  text-align: center;
+  background: linear-gradient(to bottom right, blue, green);
+  padding: 60px;
+`;
 const Header = () => {
   return (
-    <header className="bg-primary ">
-      <h3>Aplicacion web para consultar el clima en tiempo real</h3>
+    <header>
+      <TitleApp>Aplicacion web para consultar el clima en tiempo real</TitleApp>
     </header>
   );
 };
